@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\API\AddressController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\API\AuthController;
@@ -31,9 +30,9 @@ Route::post('login', [AuthController::class, 'signin']);
 Route::post('register', [AuthController::class, 'signup']);
 
 Route::post('loginadmin', [AuthController::class, 'signinAdmin']);
-Route::post('registeradmin', [AuthController::class, 'signupAdmin']);
 
 Route::get('farms', [FarmController::class, 'index']);
+Route::get('farms/{id}', [FarmController::class, 'show']);
 Route::get('farms/{longitude}/{latitude}/{radius}', [FarmController::class, 'getFarmsByRadius']);
 
 /**
@@ -41,17 +40,24 @@ Route::get('farms/{longitude}/{latitude}/{radius}', [FarmController::class, 'get
  */
 Route::middleware(['auth:sanctum_user'])->group(function () {
 
+    // Route for the farmer only (role_id = 1)
+    Route::middleware(['ability:farm'])->group(function () {
+        Route::post('farms', [FarmController::class, 'store']);
+        Route::put('farms/{id}', [FarmController::class, 'update']);
+        Route::delete('farms/{id}', [FarmController::class, 'destroy']);
+    });
+
+    Route::get('user', [UserController::class, 'getUser']);
+
     Route::controller(UserController::class)->group(function () {
-
         Route::get('/users/{id}/farms', 'showFarm');
-
     });
 
     Route::apiResources([
         'users' => UserController::class,
         'addresses' => AddressController::class,
         'categories' => CategoryController::class,
-        'votes' => VoteController::class,
+        'votes' => VoteController::class
     ]);
 
     Route::post('logout', [AuthController::class, 'signoutUser']); // Logout user

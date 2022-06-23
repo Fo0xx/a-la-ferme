@@ -82,19 +82,7 @@ class LogoutTest extends TestCase
         // Simulating login
         $admin = Admin::factory()->create();
 
-        $headers = ['Accept' => 'application/json'];
-        $adminTest = ['email' => $admin->email, 'password' => 'password'];
-
-        $response = $this->json('POST', 'api/loginadmin', $adminTest, $headers)->assertStatus(200); // Simulating login
-        $token = $response->json()['data']['token']; // get the token
-
-        $header = ['Authorization' => "Bearer $token"]; // Null token
-
-        //$this->json('POST', 'api/loginadmin', $adminTest, $headers)->assertStatus(200);
-        $this->json('POST', 'api/logoutadmin', $header)->assertStatus(200);
-
-        // Simulating access of files
-        $this->json('GET', 'api/users', [], ['Accept' => 'application/json'])->assertStatus(404);
+        $this->getJson('api/users')->assertStatus(401);
 
         $admin->delete();
     }

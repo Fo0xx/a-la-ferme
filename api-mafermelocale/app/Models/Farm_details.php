@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Database\Factories\FarmDetailsFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
@@ -9,7 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 class Farm_details extends Model
 {
     use HasFactory, HasApiTokens;
-
+    
     /**
      * The attributes that are mass assignable.
      *

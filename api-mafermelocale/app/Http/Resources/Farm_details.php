@@ -18,7 +18,7 @@ class Farm_details extends ResourceCollection
             'id' => $this->id,
             'farm_banner' => $this->farm_banner,
             'about' => $this->about,
-            'buisness_mail' => $this->buisness_mail,
+            'business_mail' => $this->buisness_mail,
             'phone' => $this->phone,
             'instagram_id' => $this->instagram_id,
             'facebook_id' => $this->facebook_id,

@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\AddressFinder;
 use App\Http\Resources\Address as AddressResource;
 use App\Models\Address;
 use Illuminate\Http\Request;
@@ -42,7 +41,9 @@ class AddressController extends BaseController
         $validator = Validator::make($request->all(), [
             'address' => 'required|string',
             'postcode' => 'required|regex:/^(([1-95]{2}|2A|2B)[0-9]{3})$|^[971-974]$/',
-            'city' => 'required|string|max:255'
+            'city' => 'required|string|max:255',
+            'lon' => 'required|numeric',
+            'lat' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -50,14 +51,6 @@ class AddressController extends BaseController
         }
 
         $input = $request->all();
-        $coordinates = new AddressFinder($input['address'], $input['postcode'], $input['city']);
-
-        $input['lon'] = $coordinates->toCoordinates()['lon'];
-        $input['lat'] = $coordinates->toCoordinates()['lat'];
-
-        if(empty($input['lon']) || empty($input['lat'])) {
-            return $this->sendError('The input address is not valid', [], 400);
-        }
 
         $address = Address::create($input);
 
@@ -102,8 +95,10 @@ class AddressController extends BaseController
 
         $validator = Validator::make($request->all(), [
             'address' => 'required|string',
-            'postcode' => 'required|regex:/^(([1-95]{2}|2A|2B)[0-9]{3})$|^[971-974]$/',
-            'city' => 'required|string|max:255'
+            'postcode' => 'required|regex:/^(([1-95]{2}|2A|2B)[0-9]{3})$|^[971-974]$/', // regex for postcode in France
+            'city' => 'required|string|max:255',
+            'lon' => 'required|numeric',
+            'lat' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -111,14 +106,6 @@ class AddressController extends BaseController
         }
 
         $input = $request->all();
-        $coordinates = new AddressFinder($input['address'], $input['postcode'], $input['city']);
-
-        $input['lon'] = $coordinates->toCoordinates()['lon'];
-        $input['lat'] = $coordinates->toCoordinates()['lat'];
-
-        if(empty($input['lon']) || empty($input['lat'])) {
-            return $this->sendError('The input address is not valid', [], 400);
-        }
         
         $address->update($input);
 

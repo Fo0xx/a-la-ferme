@@ -75,7 +75,7 @@ class Home extends React.Component {
                     </video>
                     <Grid container justifyContent='center' sx={{ height: '90vh' }}>
                         <Grid item xs={12} display="inline-grid" alignContent="space-around" justifyContent="center">
-                            <Typography color="white" variant="h1" sx={{ p: '5% 0' }}>
+                            <Typography color="common.white" variant="h1" sx={{ p: '5% 0' }}>
                                 LE LOCAL POUR <br /> UN AVENIR MEILLEUR
                             </Typography>
                         </Grid>
@@ -83,7 +83,7 @@ class Home extends React.Component {
                             <Button variant="contained" size="large" color="secondary" href="/farms">
                                 Je découvre le projet
                             </Button>
-                            <Button variant="contained" size="large" color="primary" href="/login">
+                            <Button variant="contained" size="large" color="thirdary" href="/login">
                                 Je cherche une ferme !
                             </Button>
                         </Grid>
@@ -123,7 +123,7 @@ class Home extends React.Component {
                             {this.products.map((product, index) => (
                                 <Grid item key={index} xs={5} sm={2} borderRadius="16px" padding="1% 0" sx={{ backgroundColor: "#FBF4E9" }}>
                                     <img src={product.uri} alt={product.name} style={{ maxWidth: "100%", display: "block", margin: "0 auto" }} />
-                                    <Typography variant="body1" color="black" textAlign="center" fontWeight="bold" mt="2vh">
+                                    <Typography variant="body1" color="black" textAlign="center" fontWeight={600} mt="2vh">
                                         {product.name}
                                     </Typography>
                                 </Grid>

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\API;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
+use App\Models\Admin;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 
 class BaseController extends Controller
 {
@@ -36,5 +39,24 @@ class BaseController extends Controller
             $response['data'] = $errorMessages;
         }
         return response()->json($response, $code);
+    }
+
+    /**
+     * Check if the authenticated user is the owner of the resource or if the user is admin
+     * 
+     * @param int $user_id
+     * 
+     * @return true if the user is the owner of the resource or if the user is admin
+     */
+    public function checkUser(int $user_id) {
+        
+        while(User::find(Auth::user()->id)) {
+            if (Auth::user()->id != $user_id) {
+                return false;
+            }
+            break;
+        }
+
+        return true;
     }
 }

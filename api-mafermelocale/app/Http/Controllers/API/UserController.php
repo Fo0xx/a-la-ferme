@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\API\BaseController as BaseController;
+use App\Http\Controllers\API\BaseController;
 use App\Http\Resources\Farm as FarmResource;
 use App\Models\Farm;
 use Illuminate\Support\Facades\Auth;
@@ -62,20 +62,43 @@ class UserController extends BaseController
     }
 
     /**
+     * GetUser method, to get the current user
+     * 
+     * @return JSON The current user in JSON format
+     */
+    public function getUser()
+    {
+        $user = Auth::user();
+        $user = User::find($user->id);
+
+        $user = QueryBuilder::for(User::with('role', 'address'))
+            ->allowedFilters('first_name', 'last_name', 'email', 'username', 'role.name', 'role_id')
+            ->allowedSorts('first_name', 'last_name')
+            ->where('id', $user->id)
+            ->first();
+
+        if (is_null($user)) {
+            return $this->sendError('The user does not exist.');
+        }
+        
+        return $this->sendResponse($user, 'User retrieved.');
+    }
+
+    /**
      * Update the specified user with the requested parameters
      * 
      * @return JSON Return a JSON Response with the current user updated
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        $user = User::find($id);
+        $user = User::find($user);
 
         if (is_null($user)) {
             return $this->sendError('The user does not exist.');
         }
 
-        if (Auth::guard('sanctum_user')->user()->id != $id) { // If the user is not the same as the authenticated user (the one who is trying to update the user)
-            return $this->sendError('You can\'t modify another user !', [], 403); // Forbidden !
+        if(!$this->checkUser($user->id)) {
+            return $this->sendError('You are not authorized to perform this action.', [], 401);
         }
 
         $input = $request->all();
@@ -102,16 +125,16 @@ class UserController extends BaseController
      * 
      * @param Int ID ID of the user
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        $user = User::find($id);
+        $user = User::find($user);
 
         if (is_null($user)) { 
             return $this->sendError('The user does not exist.'); // Return error if user not found 
         }
  
-        if (Auth::guard('sanctum_user')->user()->id != $id) { // If the user is not the same as the authenticated user (the one who is trying to delete the user)
-            return $this->sendError('You can\'t delete another user !', [], 403); // Forbidden !
+        if(!$this->checkUser($user->id)) {
+            return $this->sendError('You are not authorized to perform this action.', [], 401);
         }
 
         $user->delete(); // Delete the user

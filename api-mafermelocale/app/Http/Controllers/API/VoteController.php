@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Spatie\QueryBuilder\QueryBuilder;
 use App\Http\Resources\Vote as VoteResource;
+use App\Models\User;
 
 class VoteController extends BaseController
 {
@@ -18,7 +19,6 @@ class VoteController extends BaseController
      */
     public function index()
     {
-
         $votes = QueryBuilder::for(Vote::class)
         ->allowedFilters('id', 'user_id', 'farm_id')
         ->allowedSorts('id', 'user_id', 'farm_id')
@@ -40,7 +40,6 @@ class VoteController extends BaseController
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer',
             'farm_id' => 'required|integer',
             'vote' => 'required|min:1|max:5'
         ]);
@@ -48,6 +47,8 @@ class VoteController extends BaseController
         if ($validator->fails()) {
             return $this->sendError('Incorrect vote or missing parameters', $validator->errors());
         }
+
+        $request->merge(['user_id' => Auth::id()]);
 
         $input = $request->all();
         $vote = Vote::create($input);
@@ -69,6 +70,10 @@ class VoteController extends BaseController
             return $this->sendError('The vote does not exist.');
         }
 
+        if(!$this->checkUser($vote->user_id)) {
+            return $this->sendError('You are not authorized to access this vote.',  [], 403); // 403 Forbidden error
+        }
+
         return $this->sendResponse($vote, 'Vote retrieved successfully.');
     }
 
@@ -87,16 +92,13 @@ class VoteController extends BaseController
             return $this->sendError('Vote not found');
         }
 
-        //if the user_id is not the same as the authenticated user, return error
-        if ($vote->user_id != Auth::guard('sanctum_user')->id()) {
-            return $this->sendError('You are not authorized to edit this vote');
+        if(!$this->checkUser($vote->user_id)) {
+            return $this->sendError('You are not the owner of this vote', [], 403);
         }
 
         $input = $request->all();
 
         $validator = Validator::make($input, [
-            'user_id' => 'required|integer',
-            'farm_id' => 'required|integer',
             'vote' => 'required|min:1|max:5'
         ]);
 
@@ -123,8 +125,8 @@ class VoteController extends BaseController
             return $this->sendError('The vote does not exist.');
         }
 
-        if (Auth::guard('sanctum_user')->user()->id != $id) {
-            return $this->sendError('You are not allowed to delete this vote', [], 403);
+        if(!$this->checkUser($vote->user_id)) {
+            return $this->sendError('You are not the owner of this vote', [], 403);
         }
 
         $vote->delete();

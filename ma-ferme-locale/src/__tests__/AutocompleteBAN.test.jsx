@@ -1,34 +1,40 @@
 import { cleanup, render } from '@testing-library/react';
-import renderer from 'react-test-renderer';
 import AutocompleteBAN from '../components/Farm/Positions/AutocompleteBAN';
+import Enzyme from 'enzyme';
+import { mount, shallow } from 'enzyme';
+import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
+
+Enzyme.configure({ adapter: new Adapter() });
 
 describe('AutocompleteBAN components', () => {
 
     afterEach(cleanup);
+    const onUseAutompleteMock = jest.fn();
 
     it('renders correctly', () => {
-        const tree = renderer.create(<AutocompleteBAN />).toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(mount(<AutocompleteBAN />)).toMatchSnapshot();
     });
 
-    it('It\'s different after click', () => {
-        const { getByText } = render(<AutocompleteBAN />);
-        getByText.find('input').simulate('click');
-        expect(getByText).not.toMatchSnapshot();
-    });
+    describe('testing functionnality', () => {
 
-});
+        let wrapper;
 
-describe('AutocompleteBAN components', () => {
+        beforeEach(() => {
+            wrapper = shallow(<AutocompleteBAN />);
+        });
 
-    afterEach(cleanup);
+        it('should call onUseAutomplete when the user clicks on the button', () => {
+            const wrapper = shallow(<AutocompleteBAN onUseAutomplete={onUseAutompleteMock} />);
+            wrapper.find('button').simulate('click');
+            expect(onUseAutompleteMock).toHaveBeenCalled();
+        });
 
-    //try to write an address in the input field and check if the autocomplete is working
-    it('renders correctly', () => {
-        const { getByTestId } = render(<AutocompleteBAN />);
-        const input = document.querySelector('input');
-        input.value = '1 rue de la paix';
-        expect(input.value).toBe('1 rue de la paix');
+        it('It\'s different after click', () => {
+            const { getByText } = render(<AutocompleteBAN />);
+            getByText.find('input').simulate('click');
+            expect(getByText).not.toMatchSnapshot();
+        });
+
     });
 
 });

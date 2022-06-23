@@ -33,27 +33,6 @@ class RegisterTest extends TestCase
     }
 
     /**
-     * A register admin test (required field).
-     *
-     * @return void
-     */
-    public function testsAdminRequiresPasswordEmailAndName()
-    {
-        $this->json('POST', 'api/registeradmin')
-            ->assertStatus(400)
-            ->assertJson([
-                "success" => false,
-                "message" => "Error validation",
-                "data" => [
-                    "username" => ["The username field is required."],
-                    "email" => ["The email field is required."],
-                    "password" => ["The password field is required."], 
-                    "confirm_password" => ["The confirm password field is required."]
-                ]
-            ]);
-    }
-
-    /**
      * A register user test (password confirmation).
      *
      * @return void
@@ -138,33 +117,4 @@ class RegisterTest extends TestCase
         User::where('email', 'testlogin@user.com')->delete();
     }
 
-    /**
-     * A register admin test (successfully).
-     *
-     * @return void
-     */
-    public function testsAdminRegistersSuccessfully()
-    {
-        $headers = ['Accept' => 'application/json'];
-        $adminTest = [
-            'username' => 'Test Login',
-            'email' => 'testlogin@admin.com',
-            'password' => 'Admin123',
-            'confirm_password' => 'Admin123',
-        ];
-
-        $this->json('POST', 'api/registeradmin', $adminTest, $headers)
-            ->assertStatus(201)
-            ->assertJsonStructure([
-                'data' => [
-                    'username',
-                    'email',
-                    'created_at',
-                    'updated_at',
-                    'id'
-                ],
-            ]);;
-        
-        Admin::where('email', 'testlogin@admin.com')->delete();  
-    }
 }

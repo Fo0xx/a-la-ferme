@@ -7,6 +7,8 @@ import user from '../components/User/User';
 import { Breakpoint } from 'react-socks';
 import Mobile from './Navbar/Mobile';
 import { ApiClient } from '../services/ApiClient';
+import User from '../components/User/User';
+import { Navigate } from 'react-router-dom';
 
 const settings = ['S\'inscrire', 'Se connecter'];
 
@@ -40,18 +42,9 @@ class Navbar extends React.Component {
     logout = (e) => {
         e.preventDefault();
 
-        ApiClient.post('/logout', {
-            headers: {
-                Accept: 'application/json',
-            }
-        }).then(() => {
-                console.log('logout');
-            }).catch((err) => {
-                console.log(err);
-            }).finally(() => {
-                user.logout();
-                this.props.history.push('/login');
-            });
+        User.signOut();
+
+        Navigate('/', { replace: true });
 
         this.handleCloseUserMenu();
     }
@@ -91,7 +84,7 @@ class Navbar extends React.Component {
                                     <Tooltip title="Open settings">
                                         <IconButton onClick={this.handleOpenUserMenu} sx={{ p: 0 }}>
                                             {
-                                                user.isLoggedIn() ? <Avatar alt="IAM" src="/static/images/avatar/2.jpg" /> : <Avatar alt="W" src="/static/images/avatar/2.jpg" />
+                                                user.isLoggedIn() ? <Avatar alt="user" src="/static/images/avatar/2.jpg" /> : <Avatar alt="lambda" src="/static/images/avatar/2.jpg" />
                                             }
                                         </IconButton>
                                     </Tooltip>
@@ -110,13 +103,12 @@ class Navbar extends React.Component {
                                         open={Boolean(this.state.anchorElUser)}
                                         onClose={this.handleCloseUserMenu}
                                     >
-                                        {user.isLoggedIn() ?
+                                        {User.isLoggedIn() ?
                                             <div>
                                                 <Link href="/dashboard" underline="none" color="inherit">
                                                     <MenuItem
-                                                        onClick={this.handleCloseUserMenu}>Profile</MenuItem>
+                                                        onClick={this.handleCloseUserMenu}>Mon profil</MenuItem>
                                                 </Link>
-                                                <MenuItem onClick={this.handleCloseUserMenu}>User Management</MenuItem>
                                                 <MenuItem onClick={this.logout}>Logout</MenuItem>
                                             </div>
                                             :

@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('farm_details', function (Blueprint $table) {
             $table->id();
-            $table->string('about');
+            $table->string('about', 1500);
             $table->string('farm_banner');
             $table->string('business_mail');
             $table->string('phone');

@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Navbar component The navbar should render 1`] = `ReactWrapper {}`;
+
+exports[`Navbar component The navbar should render good in mobile 1`] = `ReactWrapper {}`;

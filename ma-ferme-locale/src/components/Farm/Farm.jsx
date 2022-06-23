@@ -19,13 +19,13 @@ class Farm extends React.Component {
     render() {
 
         return (
-            <Grid container spacing={2} pt="5%">
-                <Grid item container xs={6}>
+            <Grid container>
+                <Grid item container xs={3} sm={3}>
                     <img src={this.props.farm_image} alt={this.props.name} style={{ maxWidth: "100%" }} />
                 </Grid>
-                <Grid item container xs={6}>
-                    <Typography variant="h2">{this.props.name}</Typography>
-                    <Typography variant="body1">{this.props.short_description}</Typography>
+                <Grid item container xs={12} sm={3}>
+                    <Typography variant="h3" fontWeight="400" >{this.props.name}</Typography>
+                    <Typography variant="body2">{this.props.short_description}</Typography>
                 </Grid>
             </Grid>
         );

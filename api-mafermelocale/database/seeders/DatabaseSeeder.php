@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             CountrySeeder::class,
             CurrencySeeder::class,
-            AdressSeeder::class
+            AdressSeeder::class,
+            CategorySeeder::class,
+            CompleteFarmSeeder::class,
         ]);
     }
 }

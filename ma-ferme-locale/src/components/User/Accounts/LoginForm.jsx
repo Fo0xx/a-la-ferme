@@ -5,6 +5,7 @@ import user from '../User';
 import { Typography, TextField, Button, FormControlLabel, Link, Checkbox, Box, Grid } from '@mui/material';
 import toast from 'react-hot-toast';
 import { useNavigate } from "react-router-dom";
+import User from '../User';
 
 export default class LoginForm extends React.Component {
 
@@ -35,24 +36,17 @@ export default class LoginForm extends React.Component {
         // Get the background image from Pexels API
         getPhotos(158179).then(res => {
             this.setState({ backgroundImage: res.src.large2x });
-        });
+        });  
     }
 
     handleSubmit = (e) => {
         e.preventDefault();
 
-        ApiClient.get('sanctum/csrf-cookie')
-            .then(response => {
-                ApiClient.post(`api/login`, {
-                    headers: {
-                        Accept: 'application/json'
-                    },
-                    email: this.state.email,
-                    password: this.state.password
-                }).then(response => {
-                    user.authenticated(response.data, this.authenticatedCallback)
-                });
-            });
+        User.signIn(this.state.email, this.state.password).then(res => {
+            this.authenticatedCallback();
+        }).catch(error => {
+            this.notify();
+        });
     }
 
     render() {

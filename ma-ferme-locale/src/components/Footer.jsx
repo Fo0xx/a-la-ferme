@@ -5,7 +5,7 @@ const Footer = () => {
 
     return (
         <footer className="footer" >
-            <Box className="footer-box" sx={{ background: 'black', textAlign: { xs: 'center' } }}>
+            <Box className="footer-box" sx={{ background: 'black', textAlign: { xs: 'center', sm: 'start' } }}>
                 <Grid container spacing={2} justifyContent="center" alignItems="flex-start" marginTop={0} paddingTop="4vh">
                     <Grid item xs={6} sm={3}>
                         <Typography variant="h1" color="#fff" gutterBottom>

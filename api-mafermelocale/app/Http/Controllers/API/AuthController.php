@@ -23,6 +23,7 @@ class AuthController extends BaseController
 
             if (Auth::guard('user')->attempt(['email' => $request->email, 'password' => $request->password])) {
                 $authUser = Auth::guard('user')->user();
+                
                 $success['token'] = $authUser->createToken('MaFermeLocale')->plainTextToken;
 
                 // User data
@@ -35,7 +36,7 @@ class AuthController extends BaseController
 
                 return $this->sendResponse($success, 'User signed in.');
             } else {
-                return $this->sendError('Unauthorised.', ['error' => 'Unauthorised']);
+                return $this->sendError('Unauthorised.', ['error' => 'Unauthorised'], 401);
             }
 
         } else {

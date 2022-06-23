@@ -5,13 +5,16 @@ namespace App\Http\Controllers\API;
 use App\Http\Resources\Farm as FarmCollection;
 use App\Models\Farm;
 use App\Models\Address;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
 
 class FarmController extends BaseController
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -20,13 +23,12 @@ class FarmController extends BaseController
     public function index()
     {
         $farms = QueryBuilder::for(Farm::class)
-            ->allowedIncludes(['address', 'farm_detail'])
-            ->allowedFilters('name', 'address.postcode', 'address.city')
-            ->allowedSorts('name', 'address.postcode', 'address.city')
-            ->paginate(20)
-            ->appends(request()->query());
+            ->allowedIncludes(['address', 'user', 'category', 'votes'])
+            ->allowedFilters('name', AllowedFilter::exact('address.postcode'), AllowedFilter::exact('address.city'))
+            ->allowedSorts('name')
+            ->paginate(20);
 
-        if($farms->isempty()) {
+        if ($farms->isempty()) {
             return $this->sendError('There is no farms based on your filters.');
         }
 
@@ -49,21 +51,27 @@ class FarmController extends BaseController
             'farm_image' => 'required|image:jpeg,png,jpg|max:2048',
             'address_id' => 'required|integer',
             'farm_details_id' => 'required|integer',
-            'user_id' => 'required|integer',
+            'user_id' => 'required|integer'
         ]);
 
         if ($validator->fails()) {
-            return $this->sendError('Incorrect farm or missing parameters.', $validator->errors());
+            return $this->sendError('Incorrect farm or missing parameters.', $validator->errors(), 400);
         }
 
-        // Get the image file from the request and store it in the storage
-        $uploadFolder = 'mafermelocale/images/farms/' . date('Y') . '/' . date('m');
-        $image = $request->file('image');
-        $image_uploaded_path = $image->store($uploadFolder, 'public');
-        
-        // Create the farm and save it in the database
-        $input = $request->all();
-        $input['farm_image'] = Storage::url($image_uploaded_path);
+        // If the adressed is not in the database or the user_id is not in the database, return an error
+        if(!Address::find($input['address_id']) || !User::find($input['user_id'])) {
+            return $this->sendError('The address or the user does not exist.', [], 404); // 404 Not Found error
+        }
+
+        if ($request->hasFile('farm_image')) {
+            $uploadFolder = 'mafermelocale/images/farms/' . date('Y') . '/' . date('m');
+            $image = $request->file('farm_image');
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+
+            // Create the farm and save it in the database
+            $input = $request->all();
+            $input['farm_image'] = Storage::url($image_uploaded_path);
+        }
 
         $farm = Farm::create($input);
 
@@ -84,7 +92,12 @@ class FarmController extends BaseController
             return $this->sendError('The farm does not exist.');
         }
 
-        return $this->sendResponse(new FarmCollection($farm), 'Farm retrieved.');
+        $farmQuery = QueryBuilder::for(Farm::class)
+            ->allowedIncludes(['votes', 'farm_detail', 'address', 'user', 'products'])
+            ->where('id', $id)
+            ->first();
+
+        return $this->sendResponse($farmQuery, 'Farm retrieved.');
     }
 
     /**
@@ -94,7 +107,7 @@ class FarmController extends BaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, int $id)
     {
         $farm = Farm::find($id);
 
@@ -104,32 +117,22 @@ class FarmController extends BaseController
 
         $input = $request->all();
 
-        $validator = Validator::make($input, [
-            'name' => 'required|string|max:255',
-            'short_description' => 'required|string|max:255',
-            'farm_image' => 'required|image:jpeg,png,jpg|max:2048',
-            'address_id' => 'required|integer',
-            'farm_details_id' => 'required|integer',
-            'user_id' => 'required|integer',
-        ]);
+        //if there is a new image, delete the old one and save the new one
+        if ($request->hasFile('farm_image')) {
+            //get the farm image path and delete the image from storage
+            $farm_image = $farm->farm_image; // get the image path from the farm object 
+            Storage::delete($farm_image); // delete the image from storage 
 
-        if ($validator->fails()) {
-            return $this->sendError('Incorrect farm or missing parameters.', $validator->errors());
+            // upload the new image 
+            $uploadFolder = 'mafermelocale/images/farms/' . date('Y') . '/' . date('m');
+            $image = $request->file('farm_image');
+            $image_uploaded_path = $image->store($uploadFolder, 'public');
+
+            /**
+             * Update the farm object with the new image path
+             */
+            $input['farm_image'] = Storage::url($image_uploaded_path);
         }
-
-        //get the farm image path and delete the image from storage
-        $farm_image = $farm->farm_image; // get the image path from the farm object 
-        Storage::delete($farm_image); // delete the image from storage 
-
-        // upload the new image 
-        $uploadFolder = 'mafermelocale/images/farms/' . date('Y') . '/' . date('m');
-        $image = $request->file('image');
-        $image_uploaded_path = $image->store($uploadFolder, 'public');
-
-        /**
-         * Update the farm object with the new image path
-         */
-        $input['farm_image'] = Storage::url($image_uploaded_path);
 
         $farm->update($input);
 
@@ -148,6 +151,10 @@ class FarmController extends BaseController
 
         if (is_null($farm)) {
             return $this->sendError('The farm does not exist.');
+        }
+
+        if (!$this->checkUser($farm->user_id)) {
+            return $this->sendError('You are not the owner of this farm.', [], 403);
         }
 
         $farm->delete();
@@ -171,7 +178,7 @@ class FarmController extends BaseController
      */
     public function getFarmsByRadius($longitude, $latitude, $radius)
     {
-        if(empty($longitude) || empty($latitude) || empty($radius) || !is_numeric($longitude) || !is_numeric($latitude) || !is_numeric($radius)) {
+        if (empty($longitude) || empty($latitude) || empty($radius) || !is_numeric($longitude) || !is_numeric($latitude) || !is_numeric($radius)) {
             return $this->sendError('The given parameters are not valid.');
         }
 
@@ -186,7 +193,7 @@ class FarmController extends BaseController
             ->allowedSorts('name') // Sort by name, postcode and city
             ->paginate(20); // Paginate 20 results
 
-        if($farms->isempty()) {
+        if ($farms->isempty()) {
             return $this->sendError('There is no farms based on your filters');
         }
 

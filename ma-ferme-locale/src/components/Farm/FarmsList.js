@@ -1,6 +1,6 @@
 import React from 'react';
 import { ApiClient } from '../../services/ApiClient';
-import { Button, Divider, Grid, Slider, Typography } from '@mui/material';
+import { Button, Divider, Grid, Link, Slider, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 
 import AutocompleteBAN from './Positions/AutocompleteBAN';
@@ -95,7 +95,7 @@ class FarmsList extends React.Component {
                 <Box sx={{ width: '100vw', maxWidth: '100%', mx: 'auto' }}>
                     <Grid container spacing={0} >
                         <Grid item xs={12} md={6}>
-                            <img src='./img/fresh_farm_products.png' />
+                            <img src='./img/fresh_farm_products.png' alt='Produits frais de la ferme' />
                         </Grid>
                         <Grid sx={{ display: 'grid', alignContent: 'space-evenly' }} item xs={12} md={6} padding="0 5%">
                             <Typography color='common.black' variant="h4" align='center'>
@@ -122,7 +122,7 @@ class FarmsList extends React.Component {
                                 valueLabelDisplay="auto"
                                 sx={{ borderRadius: '0 !important' }}
                             />
-                            <Button onClick={() => this.getFarmByRadius()} variant="contained" sx={{ color: 'white' }} color='black' size='large' fullWidth>
+                            <Button onClick={() => this.getFarmByRadius()} variant="contained" color='black' size='large' fullWidth>
                                 Rechercher
                             </Button>
                         </Grid>
@@ -131,7 +131,7 @@ class FarmsList extends React.Component {
                     <Divider sx={{ width: '50%', margin: '0 auto', border: '1px solid', background: 'black' }} variant='fullWidth' textAlign='center' />
                 </Box>
 
-                <Typography variant="h4" align='center'>
+                <Typography variant="h4" align='center' pb="5%">
                     Il y a <Typography color="primary" variant="h4" component="span">{this.state.farms.length}</Typography> ferme.s autour de vous
                 </Typography>
 
@@ -143,12 +143,14 @@ class FarmsList extends React.Component {
                         :
                         <Grid container justifyContent="space-evenly">
                             {
-                            this.state.farms.map(farm =>
-                            <Grid item container xs={12} sm={5} data-farm-id={farm.id}>
-                                <Farm name={farm.name} short_description={farm.short_description} farm_image={farm.farm_image} />
-                            </Grid>
-                            )
-                        }
+                                this.state.farms.map(farm =>
+                                    <Link href={`/farms/${farm.id}`} key={farm.id}>
+                                        <Grid item container xs={12} sm={5} data-farm-id={farm.id}>
+                                            <Farm name={farm.name} short_description={farm.short_description} farm_image={farm.farm_image} />
+                                        </Grid>
+                                    </Link>
+                                )
+                            }
                         </Grid>
                 }
             </>
