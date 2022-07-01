@@ -1,0 +1,516 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API Ma Ferme Locale",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "http://127.0.0.1:8000/api",
+            "description": "Ma Ferme Locale API"
+        }
+    ],
+    "paths": {
+        "/addresses": {
+            "get": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get all addresses",
+                "operationId": "getAddresses",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "sanctum": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Address"
+                ],
+                "summary": "Get all addresses",
+                "operationId": "f1828f50a1f714f1a0ef87b06becae7d",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Address"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "/Http/Resources/Address/toArray"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "Login",
+                "operationId": "login",
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "description": "Email",
+                                        "type": "string"
+                                    },
+                                    "password": {
+                                        "description": "Password",
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {}
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AddressResource": {
+                "properties": {
+                    "id": {
+                        "description": "id",
+                        "type": "integer",
+                        "format": "integer"
+                    },
+                    "address": {
+                        "description": "address",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "postcode": {
+                        "description": "postcode",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "city": {
+                        "description": "city",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "lon": {
+                        "description": "longitude of the address",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lat": {
+                        "description": "latitude of the address",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "country_id": {
+                        "description": "country_id",
+                        "type": "integer",
+                        "format": "integer"
+                    },
+                    "created_at": {
+                        "description": "created_at",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "updated_at": {
+                        "description": "updated_at",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Address": {
+                "properties": {
+                    "address": {
+                        "description": "address",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "postcode": {
+                        "description": "postcode",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "city": {
+                        "description": "city",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "lon": {
+                        "description": "longitude of the address",
+                        "type": "number",
+                        "format": "float"
+                    },
+                    "lat": {
+                        "description": "latitude of the address",
+                        "type": "number",
+                        "format": "float"
+                    }
+                },
+                "type": "object"
+            },
+            "Admin": {
+                "properties": {
+                    "username": {
+                        "description": "username",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "email": {
+                        "description": "email",
+                        "type": "string",
+                        "format": "string",
+                        "example": "admin@gmail.com"
+                    },
+                    "password": {
+                        "description": "password",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Category": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the category",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "description": {
+                        "description": "The description of the category",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "image_path": {
+                        "description": "The link to the image of the category",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "lang_id": {
+                        "description": "The id of the lang",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Country": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the country",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "iso_code": {
+                        "description": "The iso code of the country",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "currency_id": {
+                        "description": "The id of the currency",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            },
+            "Currency": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the currency",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "iso_code": {
+                        "description": "The iso code of the currency",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Farm": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "farm_image": {
+                        "description": "The link to the image of the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "short_description": {
+                        "description": "The short description of the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "address_id": {
+                        "description": "The id of the address",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "farm_details_id": {
+                        "description": "The id of the farm details",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "user_id": {
+                        "description": "The id of the user",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "lang_id": {
+                        "description": "The id of the lang",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            },
+            "Farm_details": {
+                "properties": {
+                    "farm_banner": {
+                        "description": "A link to the farm banner",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "about": {
+                        "description": "A description about the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "business_mail": {
+                        "description": "The email from the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "phone": {
+                        "description": "The phone number from the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "instagram_id": {
+                        "description": "The instagram id from the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "facebook_id": {
+                        "description": "The facebook id from the farm",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "lang_id": {
+                        "description": "The lang id from the farm",
+                        "type": "string",
+                        "format": "string"
+                    }
+                },
+                "type": "object"
+            },
+            "Lang": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the lang",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "iso_code": {
+                        "description": "The iso code of the lang",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "language_locale": {
+                        "description": "The locale of the lang",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "date_format_lite": {
+                        "description": "The date format lite of the lang",
+                        "type": "string",
+                        "format": "string",
+                        "example": "d/m/Y"
+                    },
+                    "date_format_full": {
+                        "description": "The date format full of the lang",
+                        "type": "string",
+                        "format": "string",
+                        "example": "d/m/Y H:i:s"
+                    }
+                },
+                "type": "object"
+            },
+            "Product": {
+                "properties": {
+                    "product_name": {
+                        "description": "The name of the product",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "price": {
+                        "description": "The price of the product",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "product_image": {
+                        "description": "The link to the image of the product",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "short_description": {
+                        "description": "The short description of the product",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "category_id": {
+                        "description": "The id of the category",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "farm_id": {
+                        "description": "The id of the farm",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "lang_id": {
+                        "description": "The id of the lang",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            },
+            "Role": {
+                "properties": {
+                    "name": {
+                        "description": "The name of the role",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "lang_id": {
+                        "description": "The id of the lang",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "properties": {
+                    "first_name": {
+                        "description": "The name of the user",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "last_name": {
+                        "description": "The last name of the user",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "email": {
+                        "description": "The email of the user",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "password": {
+                        "description": "The password of the user",
+                        "type": "string",
+                        "format": "string"
+                    },
+                    "role_id": {
+                        "description": "The id of the role",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "address_id": {
+                        "description": "The id of the address",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            },
+            "Vote": {
+                "properties": {
+                    "vote": {
+                        "description": "The amount of the vote",
+                        "type": "integer",
+                        "format": "int",
+                        "maximum": 5,
+                        "minimum": 0
+                    },
+                    "user_id": {
+                        "description": "The id of the user",
+                        "type": "integer",
+                        "format": "int"
+                    },
+                    "farm_id": {
+                        "description": "The id of the farm",
+                        "type": "integer",
+                        "format": "int"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "sanctum": {
+                "type": "apiKey",
+                "description": "Enter token in format (Bearer \"<token>\")",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "User"
+        },
+        {
+            "name": "Admin"
+        }
+    ]
+}

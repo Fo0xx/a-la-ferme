@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @OA\Schema(
+ * schema="Farm",
+ * type="object",
+ * )
+ */
 class Farm extends Model
 {
     use HasFactory, HasApiTokens;
@@ -14,6 +20,15 @@ class Farm extends Model
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     */
+    /**
+     * @OA\Property(type="string", format="string", description="The name of the farm", property="name"),
+     * @OA\Property(type="string", format="string", description="The link to the image of the farm", property="farm_image"),
+     * @OA\Property(type="string", format="string", description="The short description of the farm", property="short_description"),
+     * @OA\Property(type="integer", format="int", description="The id of the address", property="address_id"),
+     * @OA\Property(type="integer", format="int", description="The id of the farm details", property="farm_details_id"),
+     * @OA\Property(type="integer", format="int", description="The id of the user", property="user_id"),
+     * @OA\Property(type="integer", format="int", description="The id of the lang", property="lang_id"),
      */
     protected $fillable = [
         'name',
@@ -25,11 +40,13 @@ class Farm extends Model
         'lang_id'
     ];
 
-    public function lang() {
+    public function lang()
+    {
         return $this->belongsTo(Lang::class);
     }
 
-    public function votes() {
+    public function votes()
+    {
         return $this->hasMany(Vote::class);
     }
 

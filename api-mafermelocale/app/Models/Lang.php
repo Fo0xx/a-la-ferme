@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @OA\Schema(
+ * schema="Lang",
+ * type="object",
+ * )
+ */
 class Lang extends Model
 {
     use HasFactory, HasApiTokens;
@@ -14,6 +20,13 @@ class Lang extends Model
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     */
+    /**
+     * @OA\Property(type="string", format="string", description="The name of the lang", property="name"),
+     * @OA\Property(type="string", format="string", description="The iso code of the lang", property="iso_code"),
+     * @OA\Property(type="string", format="string", description="The locale of the lang", property="language_locale"),
+     * @OA\Property(type="string", format="string", description="The date format lite of the lang", property="date_format_lite", example="d/m/Y"),
+     * @OA\Property(type="string", format="string", description="The date format full of the lang", property="date_format_full", example="d/m/Y H:i:s"),
      */
     protected $fillable = [
         'name',

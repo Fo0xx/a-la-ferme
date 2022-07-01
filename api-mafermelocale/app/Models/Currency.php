@@ -6,6 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * @OA\Schema(
+ * schema="Currency",
+ * type="object",
+ * )
+ */
 class Currency extends Model
 {
     use HasFactory, HasApiTokens;
@@ -14,6 +20,10 @@ class Currency extends Model
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     */
+    /**
+     * @OA\Property(type="string", format="string", description="The name of the currency", property="name"),
+     * @OA\Property(type="string", format="string", description="The iso code of the currency", property="iso_code"),
      */
     protected $fillable = [
         'name',

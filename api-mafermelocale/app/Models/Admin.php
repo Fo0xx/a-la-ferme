@@ -8,7 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
-
+/**
+ * @OA\Schema(
+ *  schema="Admin",
+ * type="object",
+ * )
+ */
 class Admin extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -17,6 +22,11 @@ class Admin extends Authenticatable
      * The attributes that are mass assignable.
      *
      * @var array<int, string>
+     */
+    /**
+     * @OA\Property(type="string", format="string", description="username", property="username"),
+     * @OA\Property(type="string", format="string", description="email", property="email", example="admin@gmail.com"),
+     * @OA\Property(type="string", format="string", description="password", property="password"),
      */
     protected $fillable = [
         'username',

@@ -14,12 +14,20 @@ import Forms from './components/User/Accounts/Forms';
 import toast, { Toaster } from 'react-hot-toast';
 import Footer from './components/Footer';
 import Error404Page from './components/Error404';
+import Projet from './components/Projet';
 import ShowFarm from './components/Farm/ShowFarm';
+import { ApiClient } from './services/ApiClient';
 
 const Home = lazy(() => import('./components/Home'));
 const notify = () => toast('Here is your toast.');
 
-
+//set an interceptor for ApiClient when the response code is 500
+ApiClient.interceptors.response.use((response) => {
+	if (response.status === 500) {
+		toast.error('Une erreur est survenue, veuillez réessayer plus tard.');
+	}
+	return response;
+});
 
 // We set the default breakpoints for react-socks according to the Material Design spec
 setDefaultBreakpoints([
@@ -47,6 +55,7 @@ function App() {
 					</Route>
 					<Route path="/login" element={<Forms login={true} />} />
 					<Route path="/register" element={<Forms login={false} />} />
+					<Route path="/le-projet" element={<Projet />} />
 					<Route
 						path="*"
 						element={

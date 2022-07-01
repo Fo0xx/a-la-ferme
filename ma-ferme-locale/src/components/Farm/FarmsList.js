@@ -95,7 +95,7 @@ class FarmsList extends React.Component {
                 <Box sx={{ width: '100vw', maxWidth: '100%', mx: 'auto' }}>
                     <Grid container spacing={0} >
                         <Grid item xs={12} md={6}>
-                            <img src='./img/fresh_farm_products.png' alt='Produits frais de la ferme' />
+                            <img src='./img/fresh_farm_products.png' alt='Produits frais de la ferme' style={{width: "100%"}} />
                         </Grid>
                         <Grid sx={{ display: 'grid', alignContent: 'space-evenly' }} item xs={12} md={6} padding="0 5%">
                             <Typography color='common.black' variant="h4" align='center'>
@@ -141,10 +141,10 @@ class FarmsList extends React.Component {
                             Aucune ferme trouvée
                         </Typography>
                         :
-                        <Grid container justifyContent="space-evenly">
+                        <Grid container display="flex">
                             {
                                 this.state.farms.map(farm =>
-                                    <Link href={`/farms/${farm.id}`} key={farm.id}>
+                                    <Link href={`/farms/${farm.id}`} key={farm.id} color="inherit" underline="none">
                                         <Grid item container xs={12} sm={5} data-farm-id={farm.id}>
                                             <Farm name={farm.name} short_description={farm.short_description} farm_image={farm.farm_image} />
                                         </Grid>

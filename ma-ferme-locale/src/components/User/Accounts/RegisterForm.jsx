@@ -3,6 +3,7 @@ import { ApiClient } from '../../../services/ApiClient';
 import { getPhotos } from '../../../services/Pexels';
 import user from '../User';
 import { Typography, TextField, Button, FormControlLabel, Link, Box, Grid, Switch } from '@mui/material';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
 export default class LoginForm extends React.Component {
 
@@ -59,7 +60,9 @@ export default class LoginForm extends React.Component {
             <Box className='login-container' display="grid" alignItems="center" height="100vh">
                 <img src={this.state.backgroundImage} alt="Mouton dans la prairie"/>
                 <Grid container direction='row' spacing={0} minHeight="75%" maxWidth="lg" margin="0 auto" align='center' justifyContent="center">
-                    <Grid item container direction='column' display="flex" justifyContent="center" xs={12} sm={12} md={6} sx={{ background: 'white', padding: { sm: '0 10%' } }}>
+                    <Grid item container direction='column' display="flex" alignItems="center" justifyContent="center" xs={12} sm={12} md={6} sx={{ background: 'white', padding: { sm: '0 10%' } }}>
+                        <AccountCircleIcon fontSize='large' sx={{ fontSize: 50 }} />
+                        <Typography variant="h4" color="primary">Créer un compte</Typography>
                         <Box component="form" onSubmit={this.handleSubmit} sx={{ mt: 1 }}>
                             <Grid container direction='row' spacing={2}>
                                 <Grid item xs={12} md={6}>
@@ -106,6 +109,7 @@ export default class LoginForm extends React.Component {
                                 name="password"
                                 autoComplete="new-password"
                                 type="password"
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                                 autoFocus
                                 fullWidth
                                 onChange={(e) => this.setState({ password: e.target.value })}
@@ -118,6 +122,7 @@ export default class LoginForm extends React.Component {
                                 name="email"
                                 autoComplete="new-password"
                                 type="password"
+                                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
                                 autoFocus
                                 fullWidth
                                 onChange={(e) => this.setState({ confirm_password: e.target.value })}
@@ -132,11 +137,6 @@ export default class LoginForm extends React.Component {
                                 Se connecter
                             </Button>
                             <Grid container>
-                                <Grid item md>
-                                    <Link href="#" variant="body2">
-                                        Mot de passe oublié ?
-                                    </Link>
-                                </Grid>
                                 <Grid item md>
                                     <Link href="#" variant="body2">
                                         {"Vous avez déjà un compte ? Connectez-vous"}

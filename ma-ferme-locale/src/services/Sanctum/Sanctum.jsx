@@ -99,31 +99,29 @@ const Sanctum = (
         });
     }
 
+    //recreate the checkAuthentication function to return an object
     const checkAuthentication = () => {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (isAuthenticated === null) {
-
-                    try {
-                        await revalidate();
-                        return resolve(true);
-                    } catch (error) {
-                        if (error.response && error.response.status === 401) {
-                            // If there's a 401 error the user is not signed in.
-                            setSanctumState({ user: null, token: '', authenticated: false });
-                            return resolve(false);
-                        } else {
-                            // If there's any other error, something has gone wrong.
-                            return reject(error);
-                        }
+        try {
+            if(isAuthenticated === null) {
+                try {
+                    revalidate();
+                    return { signedIn: true };
+                } catch (error) {
+                    if (error.response && error.response.status === 401) {
+                        // If there's a 401 error the user is not signed in.
+                        setSanctumState({ user: null, token: '', authenticated: false });
+                        return { signedIn: false };
+                    } else {
+                        // If there's any other error, something has gone wrong.
+                        return { error };
                     }
-                } else {
-                    return resolve(isAuthenticated);
                 }
-            } catch (error) {
-                return reject(error);
+            } else {
+                return { signedIn: isAuthenticated };
             }
-        });
+        } catch (error) {
+            return { error };
+        }
     }
 
     return (

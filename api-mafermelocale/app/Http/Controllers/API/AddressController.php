@@ -16,14 +16,34 @@ class AddressController extends BaseController
      *
      * @return \Illuminate\Http\Response
      */
+    /**
+     *  @OA\Get(
+     *      path="/addresses",
+     *      operationId="getAddresses",
+     *      tags={"Address"},
+     *      summary="Get all addresses",
+     *      security={{"sanctum":{}}},
+     *      @OA\Response(
+     *          response=200,
+     *          description="Successful operation",
+     *         @OA\MediaType(
+     *            mediaType="application/json",
+     *         )
+     *      ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *     ),
+     *  )
+     */
     public function index()
     {
         $addresses = QueryBuilder::for(Address::class)
-        ->allowedFilters('address', 'postcode', 'city')
-        ->allowedSorts('address', 'postcode')
-        ->get();
+            ->allowedFilters('address', 'postcode', 'city')
+            ->allowedSorts('address', 'postcode')
+            ->get();
 
-        if($addresses->isempty()) {
+        if ($addresses->isempty()) {
             return $this->sendError('There is no users based on your filter');
         }
 
@@ -35,6 +55,37 @@ class AddressController extends BaseController
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     */
+    /**
+     * @OA\Post(
+     *    path="/addresses",
+     *    tags={"Address"},
+     *   summary="Get all addresses",
+     * @OA\RequestBody(
+     *     required=true,
+     *    @OA\MediaType(
+     *        mediaType="application/json",
+     *       @OA\Schema(
+     *          type="object",
+     *          ref="#/components/schemas/Address",
+     *         @OA\Property(
+     *            property="address",
+     *           type="string",
+     *          description="Address",
+     *         example="1 rue de la paix"
+     *        ),
+     *      ),
+     *   ),
+     * ),
+     *  @OA\Response(
+     *        response=200,
+     *       description="Successful operation",
+     *      @OA\JsonContent(
+     *         type="array",
+     *        @OA\Items(ref="/Http/Resources/Address/toArray")
+     *     )
+     *  )
+     * )
      */
     public function store(Request $request)
     {
@@ -70,7 +121,7 @@ class AddressController extends BaseController
         if (is_null($address)) {
             return $this->sendError('The address does not exist.');
         }
-        
+
         return $this->sendResponse(new AddressResource($address), 'Address retrieved');
     }
 
@@ -88,8 +139,8 @@ class AddressController extends BaseController
         if (is_null($address)) {
             return $this->sendError('The address does not exist.');
         }
- 
-        if(Auth::guard('sanctum_user')->id() !== $address->user_id) { 
+
+        if (Auth::guard('sanctum_user')->id() !== $address->user_id) {
             return $this->sendError('You are not allowed to update this address', [], 403); // 403 forbidden
         }
 
@@ -106,7 +157,7 @@ class AddressController extends BaseController
         }
 
         $input = $request->all();
-        
+
         $address->update($input);
 
         return $this->sendResponse($address, 'Address updated successfully.');
@@ -125,11 +176,11 @@ class AddressController extends BaseController
         if (is_null($address)) {
             return $this->sendError('The address does not exist.');
         }
-        
-        if($address->user_id != Auth::guard('sanctum_user')->id()) { // if the address id is not the same as the authenticated user id, return an error
+
+        if ($address->user_id != Auth::guard('sanctum_user')->id()) { // if the address id is not the same as the authenticated user id, return an error
             return $this->sendError('You are not authorized to delete this address.', [], 403); // 403 forbidden
         }
-        
+
         return $this->sendResponse([], 'Address deleted.');
     }
 }

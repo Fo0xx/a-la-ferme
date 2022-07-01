@@ -7,6 +7,7 @@ import { ApiClient } from "../../services/ApiClient";
 import CreditCardIcon from '@mui/icons-material/CreditCard';
 import PetsOutlinedIcon from '@mui/icons-material/PetsOutlined';
 import AccessibleForwardOutlinedIcon from '@mui/icons-material/AccessibleForwardOutlined';
+import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
 import EggIcon from '@mui/icons-material/Egg';
 import MapIcon from '@mui/icons-material/Map';
 import FarmMap from "./FarmMap";
@@ -64,7 +65,7 @@ const ShowFarm = () => {
                         <Grid item xs={12} sm={8}>
                             <Typography variant="body1" width="100%" whiteSpace="pre-line" fontWeight={600}>{farmDetail.about}</Typography>
                         </Grid>
-                        <Grid direction="column" item xs={12} sm={3.5} >
+                        <Grid item={true} xs={12} sm={3.5} >
                             <Grid display="grid" alignItems="center" justifyContent="center" height="7vh" bgcolor="#315955" xs={12}>
                                 <Typography variant="h3" width="100%" color="common.white">Informations utiles</Typography>
                             </Grid>
@@ -140,6 +141,10 @@ const ShowFarm = () => {
                     </Grid>
                 </Grid>
             </Box>
+            <Stack direction={{ xs: "column", sm: "row" }} alignItems="center" justifyContent="start" gap={2} mx={5} mb={{ xs: 2, sm: 5 }}>
+                <AddReactionOutlinedIcon fontSize="large" sx={{ color: "#012840" }} />
+                <Typography color="#012840" variant="h2">Avis des consommateurs</Typography>
+            </Stack>
         </>
     );
 }

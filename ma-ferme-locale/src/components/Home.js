@@ -1,4 +1,4 @@
-import { Button, Grid, Typography } from "@mui/material";
+import { Button, Grid, Stack, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import { getVideos } from "../services/Pexels";
@@ -16,8 +16,6 @@ class Home extends React.Component {
         getVideos(2758322).then(res => {
             this.setState({ video: res.video_files[2].link, poster: res.image });
         });
-
-        console.log(this.state.video);
     }
 
     //create an array of objects with all the products types
@@ -79,13 +77,15 @@ class Home extends React.Component {
                                 LE LOCAL POUR <br /> UN AVENIR MEILLEUR
                             </Typography>
                         </Grid>
-                        <Grid item alignItems="center" sx={{ display: 'grid' }}>
-                            <Button variant="contained" size="large" color="secondary" href="/farms">
-                                Je découvre le projet
-                            </Button>
-                            <Button variant="contained" size="large" color="thirdary" href="/login">
-                                Je cherche une ferme !
-                            </Button>
+                        <Grid item>
+                            <Stack justifyContent="space-evenly" height='100%'>
+                                <Button variant="contained" size="large" color="secondary" href="/farms">
+                                    Je découvre le projet
+                                </Button>
+                                <Button variant="contained" size="large" color="thirdary" href="/login">
+                                    Je cherche une ferme !
+                                </Button>
+                            </Stack>
                         </Grid>
                     </Grid>
 
@@ -130,9 +130,9 @@ class Home extends React.Component {
                             ))}
                         </Grid>
                     </Box>
-                    <Box sx={{backgroundColor: "#EAECE2"}}>
+                    <Box sx={{ backgroundColor: "#EAECE2" }}>
                         <Grid container spacing={2} marginTop="0" alignItems="center" justifyContent="center">
-                            <Grid item xs={12} sm={6} sx={{paddingLeft: {sm: "7vw"}, textAlign: {xs: "center", sm: "initial"}}}>
+                            <Grid item xs={12} sm={6} sx={{ paddingLeft: { sm: "7vw" }, textAlign: { xs: "center", sm: "initial" } }}>
                                 <Typography variant="h4" color="black" marginBottom="4vh">
                                     Une démarche développement durable
                                 </Typography>

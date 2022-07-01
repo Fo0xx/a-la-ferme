@@ -2,15 +2,32 @@ import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+/**
+ * 
+ * 
+ * @param {*} props 
+ * @returns 
+ */
 const FarmMap = props => {
 
     const mapContainer = useRef(null);
     const map = useRef(null);
-    const [lng, setLng] = useState(2.3522219);
-    const [lat, setLat] = useState(48.856614);
-    const [zoom, setZoom] = useState(9);
+    const [lng] = useState(2.3522219);
+    const [lat] = useState(48.856614);
+    const [zoom] = useState(9);
 
-    mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY; // get the mapbox api key from the .env file
+    /**
+     * Getting the mapbox token from the environment variables
+     * 
+     * @external mapboxgl
+     * 
+     * @throws {Error} If the token is not found
+     */
+    if (!process.env.REACT_APP_MAPBOX_API_KEY) {
+        throw new Error('Mapbox token not found');
+    } else {
+        mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_API_KEY;
+    }
 
     /**
      * On component mount, create the map and add the marker to the map
@@ -36,22 +53,25 @@ const FarmMap = props => {
                 center: [props.longitude, props.latitude],
                 zoom: props.zoom
             });
-    
+
             new mapboxgl.Marker({
                 draggable: true,
                 color: '#ff0000'
             }).setLngLat([props.longitude, props.latitude]).addTo(map.current);
-    
+
             //add a popup to the farm location with the farm name
             new mapboxgl.Popup({ offset: 25, closeButton: false })
                 .setLngLat([props.longitude, props.latitude])
                 .setHTML(props.farmName)
                 .addTo(map.current);
         });
-        
+
 
         map.current.addControl(new mapboxgl.FullscreenControl());
 
+        /**
+         * On component unmount, remove the map and its markers
+         */
         return function cleanup() {
             // clean up to avoid memory leaks
             map.current.remove();

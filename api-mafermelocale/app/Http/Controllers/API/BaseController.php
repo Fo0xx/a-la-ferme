@@ -1,12 +1,30 @@
 <?php
 
 namespace App\Http\Controllers\API;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller as Controller;
 use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * @OA\Info(title="API Ma Ferme Locale", version="1.0")
+ * 
+ * @OA\Server(
+ *      url=L5_SWAGGER_CONST_HOST,
+ *      description="Ma Ferme Locale API"
+ * )
+ * 
+ * @OAS\SecurityScheme(
+ *      securityScheme="sanctum", // name of the scheme (e.g. api_key)
+ *      type="http",
+ *      scheme="bearer"
+ * )
+ * 
+ * @OA\Tag(name="User")
+ * @OA\Tag(name="Admin")
+ */
 class BaseController extends Controller
 {
     /**
@@ -16,7 +34,7 @@ class BaseController extends Controller
      */
     public function sendResponse($result, $message, $code = 200)
     {
-    	$response = [
+        $response = [
             'success' => true,
             'data'    => $result,
             'message' => $message,
@@ -31,11 +49,11 @@ class BaseController extends Controller
      */
     public function sendError($error, $errorMessages = [], $code = 404)
     {
-    	$response = [
+        $response = [
             'success' => false,
             'message' => $error,
         ];
-        if(!empty($errorMessages)){
+        if (!empty($errorMessages)) {
             $response['data'] = $errorMessages;
         }
         return response()->json($response, $code);
@@ -48,9 +66,10 @@ class BaseController extends Controller
      * 
      * @return true if the user is the owner of the resource or if the user is admin
      */
-    public function checkUser(int $user_id) {
-        
-        while(User::find(Auth::user()->id)) {
+    public function checkUser(int $user_id)
+    {
+
+        while (User::find(Auth::user()->id)) {
             if (Auth::user()->id != $user_id) {
                 return false;
             }

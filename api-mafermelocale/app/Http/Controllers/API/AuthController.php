@@ -17,6 +17,42 @@ class AuthController extends BaseController
      * 
      * @return \Illuminate\Http\Response
      */
+    /**
+     * @OA\Post(
+     *     path="/login",
+     *     operationId="login",
+     *     tags={"User"},
+     *     summary="Login",
+     *    @OA\RequestBody(
+     *        @OA\MediaType(
+     *           mediaType="application/json",
+     *          @OA\Schema(
+     *             @OA\Property(
+     *                property="email",
+     *               type="string",
+     *              description="Email"
+     *            ),
+     *           @OA\Property(
+     *               property="password",
+     *              type="string",
+     *             description="Password"
+     *          ),
+     *        )
+     *    )
+     *  ),
+     *    @OA\Response(
+     *       response=200,
+     *      description="Successful operation",
+     *     @OA\MediaType(
+     *       mediaType="application/json",
+     *    )
+     *  ),
+     * @OA\Response(
+     *    response=401,
+     *   description="Unauthorized",
+     * ),
+     * )
+     */
     public function signin(Request $request)
     {
         if (!empty($request->email) && !empty($request->password)) {

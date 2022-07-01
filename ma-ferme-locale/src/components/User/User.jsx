@@ -3,18 +3,26 @@ import { ApiClient } from "../../services/ApiClient"
 class User {
 
     constructor() {
-        this.init()
-    }
-
-    init() {
         this.token = localStorage.getItem('userToken')
-        this.loggedIn = false;
     }
 
+    /**
+     * Return the csrf token from Sanctum
+     * 
+     * @returns {Promise<AxiosResponse<any, any>>}
+     */
     csrf = () => {
         return ApiClient.get(`sanctum/csrf-cookie`);
     };
 
+    /**
+     * Sign in the user to the API and store the token in local storage
+     * 
+     * @param {string} email The email of the user
+     * @param {string} password The password of the user
+     * 
+     * @returns {Promise<AxiosResponse<any, any>>}
+     */
     signIn = (email, password, remember) => {
         return new Promise(async (resolve, reject) => {
             try {
@@ -37,6 +45,12 @@ class User {
         });
     };
 
+    /**
+     * Revalidate the token with the API and return the user
+     * 
+     * @param {string} token 
+     * @returns {Promise<AxiosResponse<any, any>>} The user object if the token is valid
+     */
     revalidate = (token) => {
 
         return new Promise(async (resolve, reject) => {
@@ -46,7 +60,7 @@ class User {
                     {
                         headers: {
                             Authorization: `Bearer ${token}`,
-                        },
+                        }
                     });
                 resolve(userData.data);
             } catch (error) {
@@ -77,31 +91,21 @@ class User {
     };
 
     checkAuthentication() {
-        return new Promise(async (resolve, reject) => {
-            try {
-                if (this.loggedIn === false || this.loggedIn === null) {
+        const token = localStorage.getItem('userToken');
 
-                    try {
-                        await this.revalidate();
-                        return resolve(true);
-                    } catch (error) {
-                        if (error.response && error.response.status === 401) {
-                            // If there's a 401 error the user is not signed in.
-                            this.clearStorage();
-                            return resolve(false);
-                        } else {
-                            // If there's any other error, something has gone wrong.
-                            return reject(error);
-                        }
-                    }
-                } else {
-                    return resolve(this.loggedIn);
-                }
+        if (token) {
+            try {
+                this.revalidate(token).then(() => {
+                    return true;
+                })
             } catch (error) {
-                return reject(error);
+                this.clearStorage();
+                return false;
             }
-        });
+        }
+        return false;
     }
+
 
     clearStorage() {
         localStorage.removeItem('userToken')
