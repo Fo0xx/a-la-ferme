@@ -12,6 +12,8 @@ export default function AutocompleteBAN({ maxResults, setLocation }) {
     const [inputValue, setInputValue] = React.useState('');
     const [options, setOptions] = React.useState([]);
 
+    /* A function that is called when the component is mounted. It is used to fetch the data from the
+    API. */
     const fetch = React.useMemo( // memoize the fetching of the data to avoid unnecessary requests
         () =>
             debounce((request, callback) => {
@@ -69,6 +71,8 @@ export default function AutocompleteBAN({ maxResults, setLocation }) {
             getOptionLabel={option => option.properties.name + ', ' + option.properties.postcode + ' ' + option.properties.city}
             isOptionEqualToValue={(option, value) => option.properties.label === value.properties.label}
             onChange={(event, newValue) => {
+                event.preventDefault();
+                
                 setOptions(newValue ? [newValue, ...options] : options);
                 setValue(newValue);
                 // Next line is needed to avoid an error when we click on the cross to delete the value
@@ -76,6 +80,8 @@ export default function AutocompleteBAN({ maxResults, setLocation }) {
                 newValue ? setLocation(newValue.geometry.coordinates[0], newValue.geometry.coordinates[1]) : setLocation(0, 0);
             }}
             onInputChange={(event, newInputValue) => {
+                event.preventDefault();
+
                 setInputValue(newInputValue);
             }}
             renderInput={params => (<TextField {...params} label="Rechercher une adresse" variant="outlined" />)}

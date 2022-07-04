@@ -6,32 +6,3 @@
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#000000", endColorstr="#ffffff", GradientType=1);
     box-shadow: none;
 }
-
-.hexagon {
-    @include rounded-hex($rotated: true);
-    background: rgb(144, 168, 142);
-    background: -moz-linear-gradient(125deg, rgba(144, 168, 142, 1) 0%, rgba(120, 142, 118, 1) 100%);
-    background: -webkit-linear-gradient(125deg, rgba(144, 168, 142, 1) 0%, rgba(120, 142, 118, 1) 100%);
-    background: linear-gradient(125deg, rgba(144, 168, 142, 1) 0%, rgba(120, 142, 118, 1) 100%);
-    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#90a88e", endColorstr="#788e76", GradientType=1);
-    width: 4rem;
-    height: 4rem;
-    position: relative;
-    bottom: 15%;
-    @include transition(all, 0.2s, ease-in-out);
-
-    & #search-icon {
-        @include transition(all, 0.3s, ease-in-out);
-    }
-}
-
-.turning {
-    animation-name: hexagon;
-    animation-duration: 0.3s;
-    @include transition(all, 0.5s, ease-in-out);
-
-    & #search-icon {
-        transform: rotate(45deg) translate(60%, 60%);
-        @include transition(all, 0.3s, ease-in-out);
-    }
-}

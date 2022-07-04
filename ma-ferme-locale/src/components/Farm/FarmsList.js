@@ -6,23 +6,9 @@ import { Box } from '@mui/system';
 import AutocompleteBAN from './Positions/AutocompleteBAN';
 import GeoLoc from './Positions/GeoLoc';
 import Farm from './Farm';
+import { FarmListMap } from './FarmMaps';
 
 class FarmsList extends React.Component {
-
-    slugify(string) {
-        const a = 'àáâäæãåāăąçćčđďèéêëēėęěğǵḧîïíīįìıİłḿñńǹňôöòóœøōõőṕŕřßśšşșťțûüùúūǘůűųẃẍÿýžźż·/_,:;'
-        const b = 'aaaaaaaaaacccddeeeeeeeegghiiiiiiiilmnnnnoooooooooprrsssssttuuuuuuuuuwxyyzzz------'
-        const p = new RegExp(a.split('').join('|'), 'g')
-
-        return string.toString().toLowerCase()
-            .replace(/\s+/g, '-') // Replace spaces with -
-            .replace(p, c => b.charAt(a.indexOf(c))) // Replace special characters
-            .replace(/&/g, '-and-') // Replace & with 'and'
-            .replace(/[^\w-]+/g, '') // Remove all non-word characters
-            .replace(/--+/g, '-') // Replace multiple - with single -
-            .replace(/^-+/, '') // Trim - from start of text
-            .replace(/-+$/, '') // Trim - from end of text
-    }
 
     constructor(props) {
         super(props);
@@ -32,9 +18,41 @@ class FarmsList extends React.Component {
             longitude: '',
             latitude: '',
             radius: 10,
+            haveSearched: false,
         };
 
         this.setLocation = this.setLocation.bind(this);
+        this.getFarmByRadius = this.getFarmByRadius.bind(this);
+    }
+
+    /**
+     * It takes the farms array from state, and maps it to a new array of objects that conform to the
+     * GeoJSON standard.
+     * 
+     * @returns A GeoJSON object.
+     */
+    geoJSON() {
+        return {
+            "type": 'FeatureCollection',
+            "features": this.state.farms.map(farm => {
+                return {
+                    "type": 'Feature',
+                    "geometry": {
+                        "type": 'Point',
+                        "coordinates": [
+                            farm.address.lon,
+                            farm.address.lat
+                        ],
+                    },
+                    "properties": {
+                        "id": farm.id,
+                        "name": farm.name,
+                        "address": farm.address.address + ', ' + farm.address.postcode + ' ' + farm.address.city,
+                    },
+                };
+            }
+            ),
+        };
     }
 
     setFarms(farms) {
@@ -48,16 +66,18 @@ class FarmsList extends React.Component {
         });
     }
 
-
     getFarmByRadius() {
-
-        ApiClient.get(`/api/farms/${this.state.longitude}/${this.state.latitude}/${this.state.radius}`, {
+        ApiClient.get(`/api/farms/${this.state.longitude}/${this.state.latitude}/${this.state.radius}?include=address`, {
             headers: {
                 'Accept': 'application/json'
             }
         })
             .then(response => {
                 this.setFarms(response.data.data.data);
+                this.setState({
+                    haveSearched: true
+                });
+                console.log(this.state.farms);
             })
             .catch(error =>
                 console.error(error),
@@ -73,7 +93,7 @@ class FarmsList extends React.Component {
         })
             .then(response => {
                 this.setState({
-                    farms: response.data.data
+                    farms: response.data.data.data
                 });
                 console.log(this.state.farms);
             })
@@ -95,7 +115,7 @@ class FarmsList extends React.Component {
                 <Box sx={{ width: '100vw', maxWidth: '100%', mx: 'auto' }}>
                     <Grid container spacing={0} >
                         <Grid item xs={12} md={6}>
-                            <img src='./img/fresh_farm_products.png' alt='Produits frais de la ferme' style={{width: "100%"}} />
+                            <img src='./img/fresh_farm_products.png' alt='Produits frais de la ferme' style={{ width: "100%" }} />
                         </Grid>
                         <Grid sx={{ display: 'grid', alignContent: 'space-evenly' }} item xs={12} md={6} padding="0 5%">
                             <Typography color='common.black' variant="h4" align='center'>
@@ -153,6 +173,11 @@ class FarmsList extends React.Component {
                             }
                         </Grid>
                 }
+
+                {
+                    this.state.haveSearched ? <FarmListMap geoJSON={this.geoJSON()} lng={this.state.longitude} lat={this.state.latitude} /> : null
+                } 
+
             </>
         );
     }

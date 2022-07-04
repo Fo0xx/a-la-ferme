@@ -1,7 +1,6 @@
 import { AppBar, IconButton, Toolbar, Grid, Link } from "@mui/material";
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import SearchOutlinedIcon from '@mui/icons-material/SearchOutlined';
-import AddIcon from '@mui/icons-material/Add';
 import PersonOutlineIcon from '@mui/icons-material/PersonOutline';
 import React from "react";
 import { LogoutOutlined, QuestionMarkOutlined } from "@mui/icons-material";
@@ -10,6 +9,7 @@ import user from "../User/User";
 
 export default function Mobile() {
 
+    /* A React hook that is used to set the state of the component. */
     const [clickHex, setClickHex] = React.useState(false);
 
     return (

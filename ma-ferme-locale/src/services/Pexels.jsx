@@ -42,7 +42,5 @@ async function getVideos(id) {
     return await response.json();
 }
 
-/**
- * 
- */
+/* Exporting the functions `getPhotos` and `getVideos` so that they can be used in other files. */
 export { getPhotos, getVideos };

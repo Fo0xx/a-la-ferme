@@ -2,6 +2,9 @@ import { ApiClient } from "../../services/ApiClient"
 
 class User {
 
+    /**
+     * The constructor function is a special function that is called when a new object is created.
+     */
     constructor() {
         this.token = localStorage.getItem('userToken')
     }

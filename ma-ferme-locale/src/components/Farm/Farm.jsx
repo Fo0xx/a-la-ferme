@@ -1,8 +1,6 @@
 import { styled } from "@mui/material/styles";
 import { Grid, Typography } from '@mui/material';
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { ApiClient } from '../../services/ApiClient';
 
 const Farm = (props) => {
 

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Resources\Farm as FarmCollection;
+use App\Http\Resources\Farm as FarmResource;
 use App\Models\Farm;
 use App\Models\Address;
 use App\Models\User;
@@ -26,13 +26,14 @@ class FarmController extends BaseController
             ->allowedIncludes(['address', 'user', 'category', 'votes'])
             ->allowedFilters('name', AllowedFilter::exact('address.postcode'), AllowedFilter::exact('address.city'))
             ->allowedSorts('name')
-            ->paginate(20);
+            ->paginate()
+            ->appends(request()->query());
 
         if ($farms->isempty()) {
             return $this->sendError('There is no farms based on your filters.');
         }
 
-        return $this->sendResponse(FarmCollection::collection($farms), 'All farms retrieved.');
+        return $this->sendResponse($farms, 'All farms retrieved.');
     }
 
     /**
@@ -59,7 +60,7 @@ class FarmController extends BaseController
         }
 
         // If the adressed is not in the database or the user_id is not in the database, return an error
-        if(!Address::find($input['address_id']) || !User::find($input['user_id'])) {
+        if (!Address::find($input['address_id']) || !User::find($input['user_id'])) {
             return $this->sendError('The address or the user does not exist.', [], 404); // 404 Not Found error
         }
 
@@ -188,10 +189,14 @@ class FarmController extends BaseController
             ->orderBy('distance')
             ->get();
 
+
+
         $farms = QueryBuilder::for(Farm::with('farm_detail')->whereIn('address_id', $farms->pluck('id'))) // Get farms with the same address id as the address with the given radius
-            ->allowedFilters('name') // Filter by name, postcode and city
-            ->allowedSorts('name') // Sort by name, postcode and city
-            ->paginate(20); // Paginate 20 results
+            ->allowedIncludes(['address', 'user', 'category', 'votes'])
+            ->allowedFilters('name', AllowedFilter::exact('address.postcode'), AllowedFilter::exact('address.city'))
+            ->allowedSorts('name')
+            ->paginate()
+            ->appends(request()->query());
 
         if ($farms->isempty()) {
             return $this->sendError('There is no farms based on your filters');

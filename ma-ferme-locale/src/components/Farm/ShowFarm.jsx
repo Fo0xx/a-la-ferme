@@ -10,7 +10,7 @@ import AccessibleForwardOutlinedIcon from '@mui/icons-material/AccessibleForward
 import AddReactionOutlinedIcon from '@mui/icons-material/AddReactionOutlined';
 import EggIcon from '@mui/icons-material/Egg';
 import MapIcon from '@mui/icons-material/Map';
-import FarmMap from "./FarmMap";
+import { FarmMap } from "./FarmMaps";
 
 
 const ShowFarm = () => {

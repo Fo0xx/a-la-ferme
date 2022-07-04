@@ -8,14 +8,24 @@ import reportWebVitals from './reportWebVitals';
 import { BreakpointProvider } from 'react-socks';
 import { ThemeProvider } from '@emotion/react';
 import farmTheme from './FarmTheme';
+import { Sanctum } from "./services/Sanctum";
+
+const sanctumConfig = {
+  csrfCookieRoute: "sanctum/csrf-cookie",
+  signInRoute: "/api/login",
+  signOutRoute: "/api/logout",
+  userObjectRoute: "/api/user",
+};
 
 ReactDOM.render(
   <React.StrictMode>
-    <BreakpointProvider>
-      <ThemeProvider theme={farmTheme}>
-        <App />
-      </ThemeProvider>
-    </BreakpointProvider>
+    <Sanctum config={sanctumConfig} checkOnInit={true}>
+      <BreakpointProvider>
+        <ThemeProvider theme={farmTheme}>
+          <App />
+        </ThemeProvider>
+      </BreakpointProvider>
+    </Sanctum>
   </React.StrictMode>,
   document.getElementById('root')
 );
