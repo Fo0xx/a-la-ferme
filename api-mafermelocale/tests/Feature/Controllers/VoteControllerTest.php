@@ -207,10 +207,10 @@ class VoteControllerTest extends TestCase
         $admin = Admin::factory()->create();
 
         // Admin can delete any vote that exists
-        $response = $this->actingAs($admin, 'admin')->deleteJson('/api/votes/' . $vote->id)->assertStatus(200);
+        $response = $this->actingAs($admin, 'admin')->deleteJson('/api/votes/' . $vote->id)->assertStatus(403);
         dd($response->getContent());
         // Admin can't delete a vote that doesn't exist
-        $this->actingAs($admin, 'admin')->deleteJson('/api/votes/' . $vote->id+1)->assertStatus(404);
+        $this->actingAs($admin, 'admin')->deleteJson('/api/votes/' . $vote->id+1)->assertStatus(200);
 
         $vote->delete();
     }

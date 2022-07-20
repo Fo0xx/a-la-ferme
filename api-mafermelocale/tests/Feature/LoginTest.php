@@ -58,9 +58,16 @@ class LoginTest extends TestCase
     public function testUserLoginsAuthorised()
     {
         $headers = ['Accept' => 'application/json'];
-        $userTest = ['email' => 'falsetestlogin@user.com', 'password' => 'user123'];
 
-        $this->json('POST', 'api/login', $userTest, $headers)
+        //create a fake user and use it to login
+        $user = User::factory()->create([
+            'password' => Hash::make('password'),
+        ]);
+
+        $this->json('POST', 'api/login', [
+            'email' => $user->email,
+            'password' => 'password',
+        ], $headers)
             ->assertStatus(404)
             ->assertJsonStructure([
                 "success",
@@ -69,6 +76,8 @@ class LoginTest extends TestCase
                     'error'
                 ],
             ]);
+
+        $user->delete();
     }
 
     /**

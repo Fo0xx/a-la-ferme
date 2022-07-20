@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <title>Test Documentation</title>
+        <style>
+            body {
+                text-rendering: optimizeLegibility;
+                font-variant-ligatures: common-ligatures;
+                font-kerning: normal;
+                margin-left: 2em;
+                background-color: #ffffff;
+                color: #000000;
+            }
+
+            body > ul > li {
+                font-family: Source Serif Pro, PT Sans, Trebuchet MS, Helvetica, Arial;
+                font-size: 2em;
+            }
+
+            h2 {
+                font-family: Tahoma, Helvetica, Arial;
+                font-size: 3em;
+            }
+
+            ul {
+                list-style: none;
+                margin-bottom: 1em;
+            }
+        </style>
+    </head>
+    <body>
+        <h2 id="Tests\Unit\AddressTest">Address (Tests\Unit\Address)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Address belongs to user</li>
+            <li style="color: #555753;">✓ Address belongs to country</li>
+            <li style="color: #555753;">✓ Address belongs to farm</li>
+        </ul>
+        <h2 id="Tests\Unit\CategoryTest">Category (Tests\Unit\Category)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Category has many products</li>
+            <li style="color: #555753;">✓ Category belongs to lang</li>
+        </ul>
+        <h2 id="Tests\Unit\CountryTest">Country (Tests\Unit\Country)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Country has many addresses</li>
+            <li style="color: #555753;">✓ Country belongs to currency</li>
+        </ul>
+        <h2 id="Tests\Unit\CurrencyTest">Currency (Tests\Unit\Currency)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Currency has many countries</li>
+            <li style="color: #555753;">✓ Currency has many products</li>
+        </ul>
+        <h2 id="Tests\Unit\FarmDetailsTest">Farm Details (Tests\Unit\FarmDetails)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Farm details belongs to farm</li>
+            <li style="color: #555753;">✓ Farm details belongs to lang</li>
+        </ul>
+        <h2 id="Tests\Unit\FarmTest">Farm (Tests\Unit\Farm)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Farm belongs to lang</li>
+            <li style="color: #555753;">✓ Farm has many votes</li>
+            <li style="color: #555753;">✓ Farm has one farm details</li>
+            <li style="color: #555753;">✓ Farm has one address</li>
+            <li style="color: #555753;">✓ Farm belongs to user</li>
+            <li style="color: #555753;">✓ Farm has many products</li>
+        </ul>
+        <h2 id="Tests\Unit\LangTest">Lang (Tests\Unit\Lang)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Lang has many farms</li>
+            <li style="color: #555753;">✓ Lang has many categories</li>
+            <li style="color: #555753;">✓ Lang has many products</li>
+            <li style="color: #555753;">✓ Lang has many roles</li>
+            <li style="color: #555753;">✓ Lang has many farm details</li>
+        </ul>
+        <h2 id="Tests\Unit\ProductTest">Product (Tests\Unit\Product)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Product belongs to category</li>
+            <li style="color: #555753;">✓ Product belongs to farm</li>
+            <li style="color: #555753;">✓ Product belongs to lang</li>
+        </ul>
+        <h2 id="Tests\Unit\RoleTest">Role (Tests\Unit\Role)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Role has users</li>
+            <li style="color: #555753;">✓ Role has lang</li>
+        </ul>
+        <h2 id="Tests\Unit\UserTest">User (Tests\Unit\User)</h2>
+        <ul>
+            <li style="color: #555753;">✓ User has role relationship</li>
+            <li style="color: #555753;">✓ User has one address</li>
+            <li style="color: #555753;">✓ User has vote relationship</li>
+            <li style="color: #555753;">✓ User has farm relationship</li>
+        </ul>
+        <h2 id="Tests\Unit\VoteTest">Vote (Tests\Unit\Vote)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Example</li>
+        </ul>
+        <h2 id="Tests\Feature\AuthenticateMiddlewareTest">Authenticate Middleware (Tests\Feature\AuthenticateMiddleware)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Redirected if not authenticated</li>
+            <li style="color: #555753;">✓ Not redirected if authenticated</li>
+        </ul>
+        <h2 id="Tests\Feature\FarmControllerTest">Farm Controller (Tests\Feature\FarmController)</h2>
+        <ul>
+            <li style="color: #555753;">✓ Retrieving all farms</li>
+            <li style="color: #555753;">✓ A farmer can create a farm</li>
+            <li style="color: #555753;">✓ A farmer can update his farm</li>
+            <li style="color: #555753;">✓ A farmer can delete his farm</li>
+            <li style="color: #555753;">✓ User cannot create a farm</li>
+            <li style="color: #555753;">✓ Admin can delete any farm</li>
+            <li style="color: #555753;">✓ Admin can update any farm</li>
+        </ul>
+        <h2 id="Tests\Feature\VoteControllerTest">Vote Controller (Tests\Feature\VoteController)</h2>
+        <ul>

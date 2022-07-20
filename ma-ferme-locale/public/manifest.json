@@ -21,5 +21,8 @@
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#90A88E",
-  "background_color": "#E18D01"
+  "background_color": "#E18D01",
+  "permissions": [
+    "geolocation"
+  ]
 }
